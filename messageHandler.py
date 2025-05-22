@@ -8,6 +8,7 @@ import asyncio
 import re
 from random import randint
 import ttsFile
+import json
 
 
 
@@ -49,17 +50,40 @@ async def roll20(msg, bot):
         await ttsFile.buildTTS(tts_query=msg, bot=bot)
 
 async def linkMsgHttps(msg, bot):
+        
         site = msg.content.replace("https://", ".https://.").split(".")
-        if site[site.index("https://")+1] == "www":
-                msg.content = msg.content.replace(msg.content[msg.content.find("https://"):msg.content.find(" ", msg.content.find("https://"))+1], f"link {site[site.index("https://")+2]} ")
+
+        if msg.content.find(" ", msg.content.find("https://")) == -1:
+                link = msg.content[msg.content.find("https://")::]
         else:
-                msg.content = msg.content.replace(msg.content[msg.content.find("https://"):msg.content.find(" ", msg.content.find("https://"))+1], f"link {site[site.index("https://")+1]} ")
+                link = msg.content[msg.content.find("https://"):msg.content.find(" ", msg.content.find("https://"))+1:]
+
+
+        if site[site.index("https://")+1] == "www" and msg.content.find(" "):
+                msg.content = msg.content.replace(link, f"link {site[site.index("https://")+2]} ")
+        elif site[site.index("https://")+1] == "www" and not msg.content.find(" "):
+                msg.content = msg.content.replace(link, f"link {site[site.index("https://")+2]} ")
+        elif site[site.index("https://")+1] != "www" and msg.content.find(" "):
+                msg.content = msg.content.replace(link, f"link {site[site.index("https://")+1]} ")
+        else:
+                msg.content = msg.content.replace(link, f"link {site[site.index("https://")+1]} ")
         await ttsFile.buildTTS(tts_query=msg, bot=bot)
 
 async def linkMsgHttp(msg, bot):
-        site = msg.content.replace("http://", ".http://.").split(".")
-        if site[site.index("http://")+1] == "www":
-                msg.content = msg.content.replace(msg.content[msg.content.find("http://"):msg.content.find(" ", msg.content.find("http://"))+1], f"link {site[site.index("http://")+2]} ")
+
+        if msg.content.find(" ", msg.content.find("http://")) == -1:
+                link = msg.content[msg.content.find("http://")::]
         else:
-                msg.content = msg.content.replace(msg.content[msg.content.find("http://"):msg.content.find(" ", msg.content.find("http://"))+1], f"link {site[site.index("http://")+1]} ")
+                link = msg.content[msg.content.find("http://"):msg.content.find(" ", msg.content.find("http://"))+1:]
+
+        site = msg.content.replace("http://", ".http://.").split(".")
+
+        if site[site.index("http://")+1] == "www" and msg.content.find(" "):
+                msg.content = msg.content.replace(link, f"link {site[site.index("http://")+2]} ")
+        elif site[site.index("http://")+1] == "www" and not msg.content.find(" "):
+                msg.content = msg.content.replace(link, f"link {site[site.index("http://")+2]} ")
+        elif site[site.index("http://")+1] != "www" and msg.content.find(" "):
+                msg.content = msg.content.replace(link, f"link {site[site.index("http://")+1]} ")
+        else:
+                msg.content = msg.content.replace(link, f"link {site[site.index("http://")+1]} ")
         await ttsFile.buildTTS(tts_query=msg, bot=bot)
