@@ -13,6 +13,8 @@
 
 
 
+        ## FAZER UMA FUNÇÃO PARA ALTERAR O ARQUIVO JSON E O ARQUIVO TXT UMA UNICA VEZ E A PARTIR DESSA CHAMADA ALTERAR UMA LISTA DE CONFIG RODANDO EM MEMÓRIA
+
 
 import os 
 import discord
@@ -23,7 +25,7 @@ import requests
 import asyncio
 import ttsFile
 import messageHandler
-
+import json
 
 # get token
 load_dotenv()
@@ -67,12 +69,35 @@ async def config(ctx):
 
 
 @bot.tree.command(
-        name="r_channel",
+        name="list_channel",
         description="select a channel to read the messages (the bot will only read from that channel)",
         guild=target_guild
 )
+async def listChannels(ctx):
+        text_channel_list = ""
+        for channel in ctx.guild.text_channels:
+                text_channel_list += f"{channel}\n"
+        await ctx.channel.send(text_channel_list)
+        
+
+
+@bot.tree.command(
+        name="set_channel",
+        description="select a channel to read the messages (the bot will only read from that channel)",
+        guild=target_guild,
+)
 async def channel_to_read(ctx):
-        await ctx.channel.send("selecionando canal")
+        channel_ID = ctx.channel_id
+        print(channel_ID)
+        with open("channels.json", 'r') as file:
+                channels_load = json.load(file)
+        print(channels_load)
+        channels_load["channels"].append(channel_ID)
+        print(channels_load)
+        with open("channels.json", "w") as file:
+                json.dump(channels_load, file)
+
+
 
 @bot.tree.command(
         name = "clear_tts",
@@ -84,12 +109,20 @@ async def clear_tts(ctx):
         await ctx.channel.send("a fila de tts foi esvaziada")
 
 
-
 @bot.event
 async def on_message(msg):
-        if msg.author.id != bot.user.id:
-                await messageHandler.messageHandler(msg=msg, bot=bot)
 
+        if msg.author.id == bot.user.id:
+                return
+        
+
+
+        with open("channels.json", "r") as file:
+                x = json.load(file)
+        if msg.channel.id in x["channels"]:
+                await messageHandler.messageHandler(msg=msg, bot=bot)
+                return
+        await msg.channel.send("não posso ler desse canal")
 
 
 
