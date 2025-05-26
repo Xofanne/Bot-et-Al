@@ -16,6 +16,7 @@
         ## FAZER UMA FUNÇÃO PARA ALTERAR O ARQUIVO JSON E O ARQUIVO TXT UMA UNICA VEZ E A PARTIR DESSA CHAMADA ALTERAR UMA LISTA DE CONFIG RODANDO EM MEMÓRIA
 
 
+
 import os 
 import discord
 from discord.ext import commands
@@ -26,6 +27,7 @@ import asyncio
 import ttsFile
 import messageHandler
 import json
+
 
 # get token
 load_dotenv()
@@ -66,8 +68,7 @@ async def on_ready():
 # abaixo do decorator vem a função que o slash command "/" vai chamar
 async def config(ctx):
         await ctx.channel.send("arg")
-
-
+        
 @bot.tree.command(
         name="list_channel",
         description="select a channel to read the messages (the bot will only read from that channel)",
