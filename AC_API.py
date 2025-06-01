@@ -4,10 +4,13 @@ import sys
 import datetime
 import discord
 from pagination import Pagination
+from dotenv import load_dotenv
+import os
 
 URL = 'https://api.nookipedia.com/'
 
-API_KEY = "6c12a014-7a7a-4f77-ac56-03dffbf2141a"
+load_dotenv()
+API_KEY = os.getenv("ACAPI")
 
 HEADER = {
         "X-API-KEY": API_KEY,
