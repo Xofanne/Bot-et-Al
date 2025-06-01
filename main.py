@@ -1,15 +1,15 @@
 # todo
-# adicionar canal que o bot vai ler as mensagens
+# FEITO adicionar canal que o bot vai ler as mensagens
 # FEITO - adicionar o <user> disse: no começo do tts 
-# adicionar comando de para limpar queue
+# FEITO adicionar comando de para limpar queue
 
 # adicionar a API do is there any deal - https://docs.isthereanydeal.com/#tag/Prices/operation/games-overview-v2
 # colocar essa funcionalidade em um comando
 
-# fazer um sistema de rolagem de dados simples
+# FEITO fazer um sistema de rolagem de dados simples
 # o valor do dado vai ser falado pelo bot de tts e dependendo do valor do dado vai ter falas especiais
 
-# adicionar comando para o critterPedia pela API - https://www.postman.com/carson-hunter-team/acnh/api/448eae82-4ca9-41a5-a440-3bdb488171d4/documentation/1432573-3f69bc12-124b-48c0-aacf-c6121d11ff51?branch=&version=
+# FEITO adicionar comando para o critterPedia pela API - https://www.postman.com/carson-hunter-team/acnh/api/448eae82-4ca9-41a5-a440-3bdb488171d4/documentation/1432573-3f69bc12-124b-48c0-aacf-c6121d11ff51?branch=&version=
 
 
 
