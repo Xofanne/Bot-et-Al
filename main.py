@@ -27,7 +27,7 @@ import asyncio
 import ttsFile
 import messageHandler
 import json
-import req
+import AC_API
 
 
 # get token
@@ -115,7 +115,7 @@ async def clear_tts(ctx):
                 guilds=target_guild
 )
 async def list_all_bugs(ctx, month: str = ""):
-        await ctx.channel.send( await req.list_all("bugs", month))
+        await ctx.channel.send( await AC_API.list_all("bugs", month))
 
 
 @bot.tree.command(
@@ -124,7 +124,7 @@ async def list_all_bugs(ctx, month: str = ""):
                 guilds=target_guild
 )
 async def list_bug(ctx, name: str = ""):
-        await ctx.channel.send( embed = await req.list_bug(name, embed=discord.Embed()))
+        await ctx.channel.send( embed = await AC_API.list_bug(name, embed=discord.Embed()))
 
 
 @bot.tree.command(
@@ -133,7 +133,7 @@ async def list_bug(ctx, name: str = ""):
                 guilds=target_guild
 )
 async def list_all_fish(ctx, month: str = ""):
-        await ctx.channel.send(await req.list_all("fish", month))
+        await ctx.channel.send(await AC_API.list_all("fish", month))
 
 @bot.tree.command(
                 name="ac_sea_list",
@@ -141,7 +141,7 @@ async def list_all_fish(ctx, month: str = ""):
                 guilds=target_guild
 )
 async def list_all_sea_creatures(ctx, month: str = ""):
-        await ctx.channel.send(await req.list_all("sea", month))
+        await ctx.channel.send(await AC_API.list_all("sea", month))
 
 
 @bot.tree.command(
@@ -150,7 +150,7 @@ async def list_all_sea_creatures(ctx, month: str = ""):
                 guilds=target_guild
 )
 async def lisf_fish(ctx, name: str =""):
-        await ctx.channel.send( embed = await req.list_fish(name, embed = discord.Embed()))
+        await ctx.channel.send( embed = await AC_API.list_fish(name, embed = discord.Embed()))
 
 
 @bot.tree.command(
@@ -159,7 +159,7 @@ async def lisf_fish(ctx, name: str =""):
                 guilds=target_guild
 )
 async def list_villager(ctx, name:str = ""):
-        await ctx.channel.send(embed = await req.list_villager(name, embed=discord.Embed()))
+        await ctx.channel.send(embed = await AC_API.list_villager(name, embed=discord.Embed()))
 
 
 
