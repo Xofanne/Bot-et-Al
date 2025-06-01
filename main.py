@@ -13,6 +13,9 @@
 
 
 
+        ## FAZER UMA FUNÇÃO PARA ALTERAR O ARQUIVO JSON E O ARQUIVO TXT UMA UNICA VEZ E A PARTIR DESSA CHAMADA ALTERAR UMA LISTA DE CONFIG RODANDO EM MEMÓRIA
+
+
 
 import os 
 import discord
@@ -23,6 +26,8 @@ import requests
 import asyncio
 import ttsFile
 import messageHandler
+import json
+import req
 
 
 # get token
@@ -41,43 +46,60 @@ client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
 # set the Guild ID
+
 # esse ID é do server do Gio
 GUILD_ID = 1011350903221145737
-target_guild = discord.Object(id=GUILD_ID)
+
+# # AL el AL
+# GUILD_ID = 338133173533671425
+
+target_guild = [discord.Object(id=1011350903221145737), discord.Object(id=338133173533671425)]
 
 # bot.event é para marcar um event handler
 @bot.event
 async def on_ready():
-        try:
-                comSync = await bot.tree.sync(guild=target_guild)
-                print(f"sync: {len(comSync)} comms")
-        except:
-                print("not sync")
+        for id in target_guild:
+                try:
+                        comSync = await bot.tree.sync(guild=id)
+                        print(f"sync: {len(comSync)} comms in guild {id}")
+                except:
+                        print("not sync")
 
 
 # bot.tree.command adiciona um slash command "/"
 @bot.tree.command(
         name="config",
         description="configure the ttsBot",
-        guild=target_guild
+        guilds=target_guild
 )
 # abaixo do decorator vem a função que o slash command "/" vai chamar
 async def config(ctx):
         await ctx.channel.send("arg")
 
 
+##### TTS COMMANDS
+
 @bot.tree.command(
-        name="r_channel",
+        name="set_channel",
         description="select a channel to read the messages (the bot will only read from that channel)",
-        guild=target_guild
+        guilds=target_guild,
 )
 async def channel_to_read(ctx):
-        await ctx.channel.send("selecionando canal")
+        channel_ID = ctx.channel_id
+        print(channel_ID)
+        with open("channels.json", 'r') as file:
+                channels_load = json.load(file)
+        print(channels_load)
+        channels_load["channels"].append(channel_ID)
+        print(channels_load)
+        with open("channels.json", "w") as file:
+                json.dump(channels_load, file)
+
 
 @bot.tree.command(
         name = "clear_tts",
         description="comando para limpar a fila de tts, caso o bot morra ou algo assim",
-        guild=target_guild
+        guilds=target_guild
 )
 async def clear_tts(ctx):
         ttsFile.TTS_QUEUE.clear()
@@ -85,12 +107,74 @@ async def clear_tts(ctx):
 
 
 
+##### AC COMMANDS
+
+@bot.tree.command(
+                name="ac_bugs_list",
+                description="retorna o nome de todos os insetos do Animal Crossing NH",
+                guilds=target_guild
+)
+async def list_all_bugs(ctx, month: str = ""):
+        await ctx.channel.send( await req.list_all("bugs", month))
+
+
+@bot.tree.command(
+                name="ac_bug",
+                description="retorna dados sobre um inseto específico",
+                guilds=target_guild
+)
+async def list_bug(ctx, name: str = ""):
+        await ctx.channel.send( embed = await req.list_bug(name, embed=discord.Embed()))
+
+
+@bot.tree.command(
+                name="ac_fish_list",
+                description="retorna o nome de todos os peixes do Animal Crossing NH",
+                guilds=target_guild
+)
+async def list_all_fish(ctx, month: str = ""):
+        await ctx.channel.send(await req.list_all("fish", month))
+
+@bot.tree.command(
+                name="ac_sea_list",
+                description="retorna o nome de todas as criaturas marinhas do Animal Crossing NH",
+                guilds=target_guild
+)
+async def list_all_sea_creatures(ctx, month: str = ""):
+        await ctx.channel.send(await req.list_all("sea", month))
+
+
+@bot.tree.command(
+                name="ac_fish",
+                description="retorna informações sobre um peixe específico",
+                guilds=target_guild
+)
+async def lisf_fish(ctx, name: str =""):
+        await ctx.channel.send( embed = await req.list_fish(name, embed = discord.Embed()))
+
+
+@bot.tree.command(
+                name="ac_villager",
+                description="return picture, birthday and personality of a villager",
+                guilds=target_guild
+)
+async def list_villager(ctx, name:str = ""):
+        await ctx.channel.send(embed = await req.list_villager(name, embed=discord.Embed()))
+
+
+
 @bot.event
 async def on_message(msg):
-        if msg.author.id != bot.user.id:
+
+        if msg.author.id == bot.user.id:
+                return
+        
+        with open("channels.json", "r") as file:
+                x = json.load(file)
+        if msg.channel.id in x["channels"]:
                 await messageHandler.messageHandler(msg=msg, bot=bot)
-
-
+                return
+        return
 
 
 bot.run(TOKEN)
